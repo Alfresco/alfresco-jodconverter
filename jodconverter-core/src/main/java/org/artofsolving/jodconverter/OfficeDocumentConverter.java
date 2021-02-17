@@ -45,7 +45,7 @@ public class OfficeDocumentConverter {
         Map<String,Object> loadProperties = new HashMap<String,Object>();
         loadProperties.put("Hidden", true);
         loadProperties.put("ReadOnly", true);
-        loadProperties.put("UpdateDocMode", UpdateDocMode.QUIET_UPDATE);
+        loadProperties.put("UpdateDocMode", UpdateDocMode.NO_UPDATE);
         return loadProperties;
     }
 
