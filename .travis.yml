@@ -1,0 +1,41 @@
+---
+dist: xenial
+language: java
+jdk: openjdk11
+
+services:
+  - docker
+
+git:
+  depth: false
+  quiet: true
+
+cache:
+  directories:
+    - ${HOME}/.m2/repository
+
+before_cache: bash scripts/travis/cleanup_cache.sh
+
+branches:
+  only:
+    - master
+    - /feature\/.*/
+    - /fix\/.*/
+
+stages:
+  - name: test
+  - name: release
+    if: fork = false AND (branch = master OR branch =~ /release\/.*/) AND type != pull_request AND commit_message !~ /\[no release\]/
+
+before_install: travis_retry bash scripts/travis/init.sh
+
+jobs:
+  include:
+    - name: "Build"
+      script:
+        - travis_retry travis_wait 40 bash scripts/travis/build.sh
+
+    - name: "Push to Nexus"
+      stage: release
+      before_script: bash scripts/travis/verify_release_tag.sh
+      script: travis_wait 40 bash scripts/travis/maven_release.sh
