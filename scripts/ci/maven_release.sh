@@ -5,9 +5,7 @@ set -vex
 pushd "$(dirname "${BASH_SOURCE[0]}")/../../"
 
 # Use full history for release
-git checkout -B "${TRAVIS_BRANCH}"
-# Add email to link commits to user
-git config user.email "${GIT_EMAIL}"
+git checkout -B "${BRANCH_NAME}"
 
 # Run the release plugin - with "[skip ci]" in the release commit message
 pushd jodconverter-core
@@ -22,4 +20,3 @@ popd
 popd
 set +vex
 echo "=========================== Finishing Release Script =========================="
-

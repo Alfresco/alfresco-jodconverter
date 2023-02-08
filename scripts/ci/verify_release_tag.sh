@@ -21,4 +21,3 @@ fi
 popd
 set +vex
 echo "=========================== Finishing Verify Release Tag Script =========================="
-
