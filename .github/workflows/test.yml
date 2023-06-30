@@ -1,0 +1,43 @@
+# This workflow will install JodConverter dependencies and run tests 
+name: Run Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.8.0
+        with:
+          java-version: 17
+      - name: Setup Env
+        run: |
+         echo "*** Update ****"
+         sudo apt update -qq -y
+         echo "*** Install Libreoffice ***"
+         sudo apt install -qq -y libreoffice libreoffice-common
+         echo "*** Download sigar from http://www.java2s.com/Code/Jar/s/Downloadsigar164jar.htm#google_vignette ***" 
+         wget http://www.java2s.com/Code/JarDownload/sigar/sigar-1.6.4.jar.zip
+         sudo apt-get -qq -y install unzip
+         unzip sigar-1.6.4.jar.zip
+         echo "*** Set Java Library Path ***"
+         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${GITHUB_WORKSPACE}/sigar-1.6.4.jar
+         export CLASSPATH="$CLASSPATH:${GITHUB_WORKSPACE}/sigar-1.6.4.jar"
+         wget https://sourceforge.net/projects/sigar/files/sigar/1.6/hyperic-sigar-1.6.4.tar.gz/download
+         wget https://netcologne.dl.sourceforge.net/project/sigar/sigar/1.6/hyperic-sigar-1.6.4.tar.gz
+         tar xvf hyperic-sigar-1.6.4.tar.gz
+         cd hyperic-sigar-1.6.4
+         sudo cp sigar-bin/lib/libsigar-`dpkg --print-architecture`-`uname -s | tr '[:upper:]' '[:lower:]'`.so /usr/lib
+         sudo apt install -qq -y libhyperic-sigar-java
+#        https://stackoverflow.com/questions/21894128/how-to-install-sigar-on-ubuntu-based-linux
+
+#         sudo DEBIAN_FRONTEND=noninteractive apt update -qq -y
+#         sudo apt update -qq -y
+#         sudo DEBIAN_FRONTEND=noninteractive apt install -qq -y libreoffice libreoffice-common
+#         echo "*** Start Libreoffice ***"
+#         /usr/bin/libreoffice --headless
+      - name: Test Jodconverter
+        run: cd jodconverter-core && mvn clean install
