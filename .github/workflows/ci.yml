@@ -25,8 +25,8 @@ jobs:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - uses: actions/checkout@v4
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v7.0.0
       - name: "Build"
         timeout-minutes: ${{ fromJSON(env.GITHUB_ACTIONS_DEPLOY_TIMEOUT) }}
         run: mvn -f jodconverter-core/pom.xml -B -V install -U -DskipTests
@@ -40,12 +40,12 @@ jobs:
       github.event_name != 'pull_request' &&
       !contains(github.event.head_commit.message, '[no-release]')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
-      - uses: Alfresco/alfresco-build-tools/.github/actions/configure-git-author@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v7.0.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v7.0.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/configure-git-author@v7.0.0
         with:
           username: ${{ secrets.BOT_GITHUB_USERNAME }}
           email: ${{ secrets.BOT_GITHUB_EMAIL }}
