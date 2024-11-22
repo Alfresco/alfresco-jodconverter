@@ -1,0 +1,43 @@
+# Auto-generated .travis.yml file
+# Generated 2020-11-26 09:30:32 from Bamboo build plan PLAT-JOD
+
+language: java
+
+jdk:
+  - oraclejdk8
+
+dist: trusty
+
+addons:
+  artifacts: true
+
+stages:
+  - name: Tests
+  - name: Release
+    if: fork = false AND (branch = master OR branch =~ /support\/.*/) AND type != pull_request AND commit_message !~ /\[no-release\]/
+
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Tests"
+      script:
+        # Build + Install
+        - mvn --batch-mode clean install -DskipTests -f jodconverter-core/pom.xml
+        # Sonar
+        # - mvn --batch-mode org.codehaus.mojo:sonar-maven-plugin:2.6:sonar
+    - stage: "Tests"
+      name: "WhiteSource Scan"
+      # script:
+        # WhiteSource License Check
+        # - mvn clean org.whitesource:whitesource-maven-plugin:checkPolicies
+      # after_script:
+        # Push artifacts to S3
+        # - artifacts upload target/site/whitesource/*
+    - stage: "Release"
+      name: "Release"
+      script:
+        # Release
+        - GIT_AUTHOR_NAME=alfresco-build GIT_AUTHOR_EMAIL=build@alfresco.com GIT_COMMITTER_NAME=alfresco-build GIT_COMMITTER_EMAIL=build@alfresco.com mvn --batch-mode -f jodconverter-core/pom.xml -DreleaseVersion=${RELEASE_VERSION} -DdevelopmentVersion=${DEVELOPMENT_VERSION} -DskipTests -Darguments=-DskipTests  release:prepare release:perform
+      after_script:
+        # Push artifacts to S3
+        - artifacts upload jodconverter-core/target/*.jar
