@@ -23,6 +23,8 @@ import org.artofsolving.jodconverter.document.DocumentFormatRegistry;
 import org.artofsolving.jodconverter.office.OfficeException;
 import org.artofsolving.jodconverter.office.OfficeManager;
 
+import com.sun.star.document.LinkUpdateModes;
+import com.sun.star.document.MacroExecMode;
 import com.sun.star.document.UpdateDocMode;
 
 public class OfficeDocumentConverter {
@@ -46,6 +48,9 @@ public class OfficeDocumentConverter {
         loadProperties.put("Hidden", true);
         loadProperties.put("ReadOnly", true);
         loadProperties.put("UpdateDocMode", UpdateDocMode.NO_UPDATE);
+        loadProperties.put("MacroExecutionMode", MacroExecMode.NEVER_EXECUTE);
+        loadProperties.put("OpenNewView", false);
+        loadProperties.put("LinkUpdateMode", LinkUpdateModes.NEVER);
         return loadProperties;
     }
 
