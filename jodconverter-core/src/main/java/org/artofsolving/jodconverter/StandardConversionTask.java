@@ -21,7 +21,9 @@ import java.util.Map;
 import org.artofsolving.jodconverter.document.DocumentFamily;
 import org.artofsolving.jodconverter.document.DocumentFormat;
 import org.artofsolving.jodconverter.office.OfficeException;
+import org.artofsolving.jodconverter.util.DocumentUtils;
 
+import com.sun.star.container.NoSuchElementException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.util.XRefreshable;
 
@@ -47,6 +49,8 @@ public class StandardConversionTask extends AbstractConversionTask {
 
     @Override
     protected void modifyDocument(XComponent document) throws OfficeException {
+        DocumentUtils.removeFilenameFields(document);
+
         XRefreshable refreshable = cast(XRefreshable.class, document);
         if (refreshable != null) {
             refreshable.refresh();
@@ -70,5 +74,7 @@ public class StandardConversionTask extends AbstractConversionTask {
         DocumentFamily family = OfficeDocumentUtils.getDocumentFamily(document);
         return outputFormat.getStoreProperties(family);
     }
+
+
 
 }
