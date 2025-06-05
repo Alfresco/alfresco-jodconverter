@@ -49,8 +49,6 @@ public class StandardConversionTask extends AbstractConversionTask {
 
     @Override
     protected void modifyDocument(XComponent document) throws OfficeException {
-        DocumentUtils.removeFilenameFields(document);
-
         XRefreshable refreshable = cast(XRefreshable.class, document);
         if (refreshable != null) {
             refreshable.refresh();
